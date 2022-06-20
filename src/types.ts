@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
-import { Honeybee } from "./honeybee";
+import { Honeybee } from "./modules/honeybee";
 
 export interface CommandContext {
   hb?: Honeybee;

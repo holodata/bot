@@ -1,14 +1,19 @@
 import { Client, Intents } from "discord.js";
-// import { Honeybee } from "./honeybee";
 import { commands } from "./commands";
-import { CommandContext } from "./interfaces";
+import { Honeybee } from "./modules/honeybee";
+import { CommandContext } from "./types";
+import { log } from "./utils/log";
 
-const MONGO_URI = process.env.MONGO_URI!;
+const HB_MONGO_URI = process.env.HB_MONGO_URI;
 
 export function createBot() {
-  // const hb = new Honeybee(MONGO_URI);
+  let hb;
+  if (HB_MONGO_URI) {
+    hb = new Honeybee(HB_MONGO_URI);
+    log("honeybee", "enabled");
+  }
 
-  const context: CommandContext = {};
+  const context: CommandContext = { hb };
 
   const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
@@ -33,16 +38,16 @@ export function createBot() {
   });
 
   client.once("ready", () => {
-    console.log("ready");
+    log("client", "ready");
   });
 
   client.on("guildDelete", async (guild) => {
-    console.log("guildDelete", guild);
+    log("client", "guildDelete", guild);
     // const invalidSubs = await removeSubscriptionForGuild(guild.id);
   });
 
   client.on("channelDelete", async (channel) => {
-    console.log("channelDelete", channel);
+    log("client", "channelDelete", channel);
     // const invalidSubs = await removeSubscriptionForChannel(channel.id);
   });
 

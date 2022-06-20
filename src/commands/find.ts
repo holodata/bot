@@ -1,14 +1,21 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
-import { Command } from "../interfaces";
-import { parse } from "../honeyql";
+import { Command } from "../types";
+import { parse } from "../modules/hql";
 import {
-  verifyGuild,
+  assertInGuild,
   verifyChannelModerator,
-  verifyRole,
+  assertHigherRole,
 } from "../utils/discord";
+import { Honeybee } from "../modules/honeybee";
 
 const MAX_LIMIT = 30;
+
+function assertHoneybee(hb?: Honeybee): asserts hb {
+  if (!hb) {
+    throw new Error("Honeybee is not enabled");
+  }
+}
 
 const command: Command = {
   data: new SlashCommandBuilder()
@@ -18,11 +25,9 @@ const command: Command = {
       builder.setName("hql").setDescription("HoneyQL").setRequired(true)
     ),
   async execute(intr: CommandInteraction, { hb }) {
-    verifyGuild(intr);
-    verifyRole(intr);
-    if (!hb) {
-      throw new Error("Honeybee is not enabled");
-    }
+    assertInGuild(intr);
+    assertHigherRole(intr);
+    assertHoneybee(hb);
 
     // parse
     const query = intr.options.getString("hql")!;
@@ -45,7 +50,10 @@ const command: Command = {
       emb.setDescription(res.message ?? "<empty>");
       return emb;
     });
-    intr.reply({
+
+    if (embeds.length === 0) return intr.reply("No result");
+
+    await intr.reply({
       embeds,
     });
   },

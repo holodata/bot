@@ -1,6 +1,6 @@
 import { CommandInteraction, Guild, GuildMember } from "discord.js";
 
-export function verifyRole(intr: CommandInteraction) {
+export function assertHigherRole(intr: CommandInteraction) {
   const member = intr.member as GuildMember;
   const guild = intr.guild as Guild;
   const bot = guild.me!;
@@ -26,7 +26,7 @@ export function verifyChannelModerator(intr: CommandInteraction) {
   }
 }
 
-export function verifyGuild(intr: CommandInteraction) {
+export function assertInGuild(intr: CommandInteraction) {
   const guild = intr.guild;
   if (!guild) throw new Error("No DM allowed");
 }

@@ -1,3 +1,6 @@
+// https://discordjs.guide/interactions/slash-commands.html#registering-slash-commands
+// NOTE: authorize `applications.commands` scope
+
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { commands } from "./commands";

@@ -5,16 +5,21 @@
 ### Setup
 
 ```bash
+copy .env.placeholder .env
+# edit .env
 yarn install
-yarn build
 ```
 
-### Debug
+### Debug Bot
 
 ```bash
-
+yarn dev
 ```
 
-## HoneyQL (Honeybee Query Language)
+## References
 
-Uses Peggy.js.
+### Discord
+
+- [Discord Developer Portal — Documentation — Permissions](https://discord.com/developers/docs/topics/permissions)
+- [Discord Moderator Academy](https://discord.com/moderation/1500000176222-201:-Permissions-on-Discord)
+- [Permissions | discord.js Guide](https://discordjs.guide/popular-topics/permissions.html#roles-as-bot-permissions)
