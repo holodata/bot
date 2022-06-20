@@ -3,7 +3,7 @@ import { CommandInteraction } from "discord.js";
 import { Honeybee } from "./honeybee";
 
 export interface CommandContext {
-  hb: Honeybee;
+  hb?: Honeybee;
 }
 
 export interface Command {

@@ -1,14 +1,14 @@
 import { Client, Intents } from "discord.js";
-import { Honeybee } from "./honeybee";
+// import { Honeybee } from "./honeybee";
 import { commands } from "./commands";
 import { CommandContext } from "./interfaces";
 
 const MONGO_URI = process.env.MONGO_URI!;
 
 export function createBot() {
-  const hb = new Honeybee(MONGO_URI);
+  // const hb = new Honeybee(MONGO_URI);
 
-  const context: CommandContext = { hb };
+  const context: CommandContext = {};
 
   const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 

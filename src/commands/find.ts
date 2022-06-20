@@ -20,6 +20,9 @@ const command: Command = {
   async execute(intr: CommandInteraction, { hb }) {
     verifyGuild(intr);
     verifyRole(intr);
+    if (!hb) {
+      throw new Error("Honeybee is not enabled");
+    }
 
     // parse
     const query = intr.options.getString("hql")!;
