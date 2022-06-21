@@ -1,5 +1,5 @@
 import { BeAnObject, ReturnModelType } from "@typegoose/typegoose/lib/types";
-import { Chat } from "./chat";
+import { Chat } from "./models/chat";
 import connectionFactory from "./db";
 
 export class Honeybee {

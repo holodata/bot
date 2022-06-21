@@ -1,25 +1,35 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import {
+  ContextMenuCommandBuilder,
+  SlashCommandBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
+} from "@discordjs/builders";
+import { CommandInteraction, MessageContextMenuInteraction } from "discord.js";
 import { Honeybee } from "./modules/honeybee";
+
+export interface Schema {
+  data: any;
+}
 
 export interface CommandContext {
   hb?: Honeybee;
+  db: PouchDB.Database<Schema>;
 }
 
-export interface Command {
+export interface SlashCommand {
   data:
     | SlashCommandBuilder
+    | SlashCommandSubcommandsOnlyBuilder
     | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
-  execute: (interaction: CommandInteraction, context: CommandContext) => any;
+  execute: (
+    interaction: CommandInteraction<"cached">,
+    context: CommandContext
+  ) => any;
 }
 
-export interface RoleChangeset {
-  roleId: string;
-  valid: boolean;
-  since?: string;
-}
-
-export interface JwtToken {
-  discordId: string;
-  iat: number;
+export interface ContextMenuCommand {
+  data: ContextMenuCommandBuilder;
+  execute: (
+    interaction: MessageContextMenuInteraction<"cached">,
+    context: CommandContext
+  ) => any;
 }

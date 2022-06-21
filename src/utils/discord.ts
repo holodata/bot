@@ -1,8 +1,7 @@
 import { CommandInteraction, Guild, GuildMember } from "discord.js";
 
-export function assertHigherRole(intr: CommandInteraction) {
-  const member = intr.member as GuildMember;
-  const guild = intr.guild as Guild;
+export function assertHigherRole(member: GuildMember) {
+  const guild = member.guild;
   const bot = guild.me!;
 
   const hasPermission =

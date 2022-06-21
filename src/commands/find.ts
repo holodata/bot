@@ -1,13 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
-import { Command } from "../types";
-import { parse } from "../modules/hql";
-import {
-  assertInGuild,
-  verifyChannelModerator,
-  assertHigherRole,
-} from "../utils/discord";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import { Honeybee } from "../modules/honeybee";
+import { parse } from "../modules/hql";
+import { SlashCommand } from "../types";
+import { assertHigherRole, assertInGuild } from "../utils/discord";
 
 const MAX_LIMIT = 30;
 
@@ -17,23 +13,31 @@ function assertHoneybee(hb?: Honeybee): asserts hb {
   }
 }
 
-const command: Command = {
+const command: SlashCommand = {
   data: new SlashCommandBuilder()
     .setName("find")
     .setDescription("Query honeybee")
     .addStringOption((builder) =>
-      builder.setName("hql").setDescription("HoneyQL").setRequired(true)
+      builder
+        .setName("hql")
+        .setDescription("Honeybee Query Language")
+        .setRequired(true)
     ),
-  async execute(intr: CommandInteraction, { hb }) {
+
+  async execute(intr, { hb }) {
     assertInGuild(intr);
-    assertHigherRole(intr);
+    assertHigherRole(intr.member);
     assertHoneybee(hb);
+
+    await intr.deferReply();
 
     // parse
     const query = intr.options.getString("hql")!;
     const defaultOptions = { sort: { timestamp: -1 }, limit: 5 };
+
     const { filter, projection = {}, options = defaultOptions } = parse(query);
-    if (options.limit > MAX_LIMIT) options.limit = MAX_LIMIT;
+    options.limit = Math.min(options.limit, MAX_LIMIT);
+
     console.log(filter, projection, options);
 
     // query
@@ -51,9 +55,9 @@ const command: Command = {
       return emb;
     });
 
-    if (embeds.length === 0) return intr.reply("No result");
+    if (embeds.length === 0) return intr.editReply("No result");
 
-    await intr.reply({
+    await intr.editReply({
       embeds,
     });
   },

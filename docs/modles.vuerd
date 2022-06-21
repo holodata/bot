@@ -1,0 +1,155 @@
+{
+  "canvas": {
+    "version": "2.2.11",
+    "width": 2000,
+    "height": 2000,
+    "scrollTop": 0,
+    "scrollLeft": 0,
+    "zoomLevel": 1,
+    "show": {
+      "tableComment": true,
+      "columnComment": true,
+      "columnDataType": true,
+      "columnDefault": true,
+      "columnAutoIncrement": false,
+      "columnPrimaryKey": true,
+      "columnUnique": false,
+      "columnNotNull": true,
+      "relationship": true
+    },
+    "database": "MySQL",
+    "databaseName": "",
+    "canvasType": "ERD",
+    "language": "GraphQL",
+    "tableCase": "pascalCase",
+    "columnCase": "camelCase",
+    "highlightTheme": "VS2015",
+    "bracketType": "none",
+    "setting": {
+      "relationshipDataTypeSync": true,
+      "relationshipOptimization": false,
+      "columnOrder": [
+        "columnName",
+        "columnDataType",
+        "columnNotNull",
+        "columnUnique",
+        "columnAutoIncrement",
+        "columnDefault",
+        "columnComment"
+      ]
+    },
+    "pluginSerializationMap": {}
+  },
+  "table": {
+    "tables": [
+      {
+        "name": "roles",
+        "comment": "map role and reaction emoji",
+        "columns": [
+          {
+            "name": "role_id",
+            "comment": "role id",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "cdb08cce-aa50-4170-959d-2773eae8f331"
+          },
+          {
+            "name": "emoji",
+            "comment": "id or name",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 63.419921875,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "30ebfe75-2792-4a8a-bab8-233d4faece93"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 196,
+          "top": 169,
+          "zIndex": 50,
+          "widthName": 60,
+          "widthComment": 120
+        },
+        "visible": true,
+        "id": "0f17b938-27b7-4232-817c-12fd34a4e803"
+      },
+      {
+        "name": "acquisition",
+        "comment": "",
+        "columns": [
+          {
+            "name": "chat_id",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": true
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 60,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "3b5dfe10-bef2-4199-b890-42dc6c8c61b2"
+          }
+        ],
+        "ui": {
+          "active": false,
+          "left": 194,
+          "top": 308,
+          "zIndex": 55,
+          "widthName": 63.42626953125,
+          "widthComment": 60
+        },
+        "visible": true,
+        "id": "ae340872-17f6-46f4-a987-cc88ee2f3212"
+      }
+    ],
+    "indexes": []
+  },
+  "memo": {
+    "memos": []
+  },
+  "relationship": {
+    "relationships": []
+  }
+}

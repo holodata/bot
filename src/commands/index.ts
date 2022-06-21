@@ -1,4 +1,6 @@
-import { Command } from "../types";
+import { SlashCommand, ContextMenuCommand } from "../types";
 import find from "./find";
+import configureRA from "./configureRA";
 
-export const commands: Command[] = [find];
+export const slashCommands: SlashCommand[] = [find];
+export const contextMenuCommands: ContextMenuCommand[] = [configureRA];
