@@ -4,6 +4,9 @@ services:
   bot:
     image: ghcr.io/holodata/bot:latest
     container_name: bot
+    restart: unless-stopped
     env_file: .env
     labels:
       com.centurylinklabs.watchtower.enable: "true"
+    extra_hosts:
+      mongo: ${HB_MONGO_REAL_IP}

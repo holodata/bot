@@ -13,7 +13,7 @@
     "genparser": "peggy ./src/modules/hql/index.pegjs",
     "predev": "npm run deploy-commands",
     "prepare": "husky install",
-    "start": "node .",
+    "start": "yarn deploy-commands && node .",
     "test": "jest"
   },
   "types": "./dist/index.d.ts",
