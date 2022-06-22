@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { MessageEmbed } from "discord.js";
 import { Honeybee } from "../modules/honeybee";
 import { parse } from "../modules/hql";
 import { SlashCommand } from "../types";
@@ -46,12 +46,14 @@ const command: SlashCommand = {
     // reply
     const embeds = result.map((res) => {
       const emb = new MessageEmbed();
-      emb.setTitle(res.timestamp.toISOString());
       emb.setAuthor({
         name: res.authorName ?? "<empty>",
-        url: `https://youtube.com/channel/${res.authorChannelId}`,
+        url: `https://www.youtube.com/watch?v=${res.originVideoId}`,
       });
       emb.setDescription(res.message ?? "<empty>");
+      // emb.setURL(`https://www.youtube.com/watch?v=${res.originVideoId}`);
+      emb.setFooter({ text: res.timestamp.toISOString() });
+      emb.setColor("ORANGE");
       return emb;
     });
 
