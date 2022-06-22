@@ -6,6 +6,8 @@ services:
     container_name: bot
     restart: unless-stopped
     env_file: .env
+    volumes:
+      - ./data:/app/data
     labels:
       com.centurylinklabs.watchtower.enable: "true"
     extra_hosts:
