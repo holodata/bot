@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  bot:
+    image: ghcr.io/holodata/bot:latest
+    container_name: bot
+    env_file: .env
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"

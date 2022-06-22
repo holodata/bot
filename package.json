@@ -10,7 +10,7 @@
     "dev": "run-p dev:*",
     "dev:server": "nodemon -w dist .",
     "dev:tsc": "tsc -w",
-    "genparser": "peggy ./src/honeyql/index.pegjs",
+    "genparser": "peggy ./src/modules/hql/index.pegjs",
     "predev": "npm run deploy-commands",
     "prepare": "husky install",
     "start": "node .",
