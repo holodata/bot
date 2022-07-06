@@ -4,7 +4,8 @@ services:
   bot:
     image: ghcr.io/holodata/bot:latest
     build: .
-    container_name: bot
+    command: yarn dev
     env_file: .env
     volumes:
-      - ./data:/app/data
+      - ./src:/app/src
+      - ./prisma:/app/prisma

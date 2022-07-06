@@ -1,7 +1,7 @@
 {
   "exclude": ["tests", "dist"],
   "compilerOptions": {
-    "target": "es2016" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "target": "es2018" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     "module": "commonjs" /* Specify what module code is generated. */,
     "rootDir": "./src" /* Specify the root folder within your source files. */,
     "declaration": true /* Generate .d.ts files from TypeScript and JavaScript files in your project. */,
@@ -12,6 +12,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
     "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
-    "allowJs": true
+    "allowJs": true, // for Peggy
+    "strictPropertyInitialization": false // https://www.kindacode.com/snippet/typeorm-property-id-has-no-initializer-and-is-not-definitely-assigned-in-the-constructor/
   }
 }

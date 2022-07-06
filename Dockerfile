@@ -9,6 +9,7 @@ RUN yarn --frozen-lockfile
 # build app
 COPY tsconfig.json ./
 COPY src src
+COPY prisma prisma
 RUN yarn build
 
 CMD ["yarn", "start"]

@@ -6,13 +6,8 @@ import {
 import { CommandInteraction, MessageContextMenuInteraction } from "discord.js";
 import { Honeybee } from "./modules/honeybee";
 
-export interface Schema {
-  data: any;
-}
-
 export interface CommandContext {
   hb?: Honeybee;
-  db: PouchDB.Database<Schema>;
 }
 
 export interface SlashCommand {

@@ -1,12 +1,13 @@
 import { ContextMenuCommandBuilder } from "@discordjs/builders";
+import { Mapping, PrismaClient } from "@prisma/client";
 import { ApplicationCommandType } from "discord-api-types/v9";
-import { GuildMember, ReactionManager } from "discord.js";
-import { ContextMenuCommand } from "../types";
+import { GuildMember } from "discord.js";
 import EmojiRegex from "emoji-regex";
+import { ContextMenuCommand } from "../types";
 import { assertHigherRole } from "../utils/discord";
 
 const emojiRegex = EmojiRegex();
-const emoteRegex = /<:([a-zA-Z0-9_]+):(\d+)>/;
+const emoteRegex = /<a?:([a-zA-Z0-9_]+):(\d+)>/;
 
 function getReaction(msg: string): string | undefined {
   const emoji = msg.match(emojiRegex);
@@ -25,16 +26,23 @@ const command: ContextMenuCommand = {
   data: new ContextMenuCommandBuilder()
     .setName("configureRA")
     .setType(ApplicationCommandType.Message),
-  async execute(intr, { db }) {
+  async execute(intr) {
     assertHigherRole(intr.member as GuildMember);
 
     await intr.deferReply({ ephemeral: true });
 
-    const { targetId, targetMessage, guild } = intr;
-    const { content } = targetMessage;
+    const prisma = new PrismaClient();
+
+    const {
+      targetId,
+      targetMessage,
+      targetMessage: { content },
+      guild,
+      guild: { id: guildId },
+    } = intr;
 
     // parse message
-    const mappings: { emoji: string; roleId: string }[] = [];
+    const mappings = [];
     for (const line of content.split("\n")) {
       const emoji = getReaction(line);
       if (!emoji) continue;
@@ -48,13 +56,24 @@ const command: ContextMenuCommand = {
     }
 
     if (mappings.length === 0)
-      return intr.editReply({ content: "Invalid format" });
+      return await intr.editReply({ content: "Invalid format" });
 
-    await db.upsert("roleAcquisition", function (doc) {
-      doc.data = { targetId, mappings };
-      return doc as any;
-    });
+    // Save to db
+    await prisma.mapping.deleteMany({ where: { guildId, targetId } });
+    await Promise.all(
+      mappings.map(({ emoji, roleId }) =>
+        prisma.mapping.create({
+          data: {
+            guildId,
+            targetId,
+            emoji,
+            roleId,
+          },
+        })
+      )
+    );
 
+    // Place role reactions
     await Promise.all(mappings.map(({ emoji }) => targetMessage.react(emoji)));
 
     intr.editReply({

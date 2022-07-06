@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import {
   Client,
   CommandInteraction,
@@ -6,13 +7,10 @@ import {
   MessageContextMenuInteraction,
   ReactionEmoji,
 } from "discord.js";
-import PouchDB from "pouchdb";
-import PouchDBUpsert from "pouchdb-upsert";
 import { contextMenuCommands, slashCommands } from "./commands";
 import { Honeybee } from "./modules/honeybee";
-import { CommandContext, Schema } from "./types";
+import { CommandContext } from "./types";
 import { log } from "./utils/log";
-PouchDB.plugin(PouchDBUpsert);
 
 const HB_MONGO_URI = process.env.HB_MONGO_URI;
 
@@ -20,7 +18,7 @@ function stringifyEmoji(emoji: ReactionEmoji | GuildEmoji): string {
   if (emoji.id === null) {
     return emoji.name!;
   } else {
-    return `<:${emoji.name}:${emoji.id}>`;
+    return `<${emoji.animated ? "a" : ""}:${emoji.name}:${emoji.id}>`;
   }
 }
 
@@ -31,9 +29,7 @@ export function createBot() {
     log("honeybee", "enabled");
   }
 
-  const db = new PouchDB<Schema>("data");
-
-  const context: CommandContext = { hb, db };
+  const context: CommandContext = { hb };
 
   // https://discordjs.guide/popular-topics/reactions.html#listening-for-reactions-on-old-messages
   const client = new Client({
@@ -62,10 +58,12 @@ export function createBot() {
         );
       } catch (error) {
         console.error(error);
-        await interaction.reply({
-          content: (error as Error).message,
-          ephemeral: true,
-        });
+        const content = (error as Error).message;
+        if (interaction.deferred || interaction.replied) {
+          await interaction.editReply({ content });
+        } else {
+          await interaction.reply({ content, ephemeral: true });
+        }
       }
     } else if (interaction.isMessageContextMenu()) {
       const command = contextMenuCommands.find(
@@ -81,10 +79,12 @@ export function createBot() {
         );
       } catch (error) {
         console.error(error);
-        await interaction.reply({
-          content: (error as Error).message,
-          ephemeral: true,
-        });
+        const content = (error as Error).message;
+        if (interaction.deferred || interaction.replied) {
+          await interaction.editReply({ content });
+        } else {
+          await interaction.reply({ content, ephemeral: true });
+        }
       }
     }
   });
@@ -125,23 +125,28 @@ export function createBot() {
       }
     }
 
+    const {
+      message: { id: targetId, guild },
+      emoji,
+    } = reaction;
+    if (!guild) return;
+
     try {
-      const roleAcquisition = await db.get("roleAcquisition");
-      const { targetId, mappings } = roleAcquisition.data;
+      const stringifiedEmoji = stringifyEmoji(emoji);
 
-      if (targetId !== reaction.message.id) return;
+      const prisma = new PrismaClient();
+      const rap = await prisma.mapping.findFirst({
+        where: { guildId: guild.id, targetId, emoji: stringifiedEmoji },
+      });
+      if (!rap) return;
 
-      const emoji = stringifyEmoji(reaction.emoji);
-      const mapping = mappings.find((m: any) => m.emoji === emoji);
-      if (!mapping) return;
+      const { roleId } = rap;
 
-      const member = reaction.message.guild?.members.cache.find(
-        (m) => m.id === user.id
-      );
+      const member = guild.members.cache.find((m) => m.id === user.id);
       if (!member) return;
 
-      await member.roles.add(mapping.roleId);
-      console.log("assigned", user.username, mapping.roleId);
+      await member.roles.add(roleId);
+      console.log("assigned", user.username, roleId);
     } catch (err) {
       console.log(err);
     }
@@ -159,23 +164,28 @@ export function createBot() {
       }
     }
 
+    const {
+      message: { id: targetId, guild },
+      emoji,
+    } = reaction;
+    if (!guild) return;
+
     try {
-      const roleAcquisition = await db.get("roleAcquisition");
-      const { targetId, mappings } = roleAcquisition.data;
+      const stringifiedEmoji = stringifyEmoji(emoji);
 
-      if (targetId !== reaction.message.id) return;
+      const prisma = new PrismaClient();
+      const rap = await prisma.mapping.findFirst({
+        where: { guildId: guild.id, targetId, emoji: stringifiedEmoji },
+      });
+      if (!rap) return;
 
-      const emoji = stringifyEmoji(reaction.emoji);
-      const mapping = mappings.find((m: any) => m.emoji === emoji);
-      if (!mapping) return;
+      const { roleId } = rap;
 
-      const member = reaction.message.guild?.members.cache.find(
-        (m) => m.id === user.id
-      );
+      const member = guild.members.cache.find((m) => m.id === user.id);
       if (!member) return;
 
-      await member.roles.remove(mapping.roleId);
-      console.log("unassigned", user.username, mapping.roleId);
+      await member.roles.remove(roleId);
+      console.log("unassigned", user.username, roleId);
     } catch (err) {
       console.log(err);
     }

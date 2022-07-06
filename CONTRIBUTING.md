@@ -8,6 +8,11 @@
 copy .env.placeholder .env
 # edit .env
 yarn install
+
+prisma generate
+prisma db push
+# when it reaches a stable state
+prisma migrate dev --name initial-state
 ```
 
 ### Debug Bot
